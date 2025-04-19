@@ -1,6 +1,6 @@
 {
   "name": "@rndev666/dep",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A tool to analyze and visualize imports and call relationships",
   "files": [
     "bin/**/*"
@@ -9,7 +9,7 @@
     "dep": "./bin/src/cli.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "npm run clean && tsc",
     "clean": "rimraf bin",
     "cm": "cz",
     "lint": "eslint ./src/ --fix",
@@ -45,10 +45,10 @@
   "homepage": "https://github.com/bezalel6/dep-analysis#readme",
   "dependencies": {
     "@typescript-eslint/types": "^5.62.0",
+    "chalk": "^4.1.2",
     "commander": "^7.2.0",
     "glob": "^11.0.1",
-    "open": "^8.4.2",
-    "chalk": "^4.1.2"
+    "open": "^8.4.2"
   },
   "devDependencies": {
     "@ryansonshine/commitizen": "^4.2.8",
@@ -64,7 +64,7 @@
     "rimraf": "^6.0.1",
     "semantic-release": "^21.0.1",
     "ts-node": "^10.2.1",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
   },
   "config": {
     "commitizen": {
