@@ -1,5 +1,14 @@
 name: Release
 on:
+  # Manual trigger
+  workflow_dispatch:
+  
+  # Automatic trigger on push to main branch
+  push:
+    branches:
+      - main  # or master, depending on your default branch
+  
+  # Keep the workflow_call for reusability
   workflow_call:
     secrets:
       NPM_TOKEN:
