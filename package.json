@@ -1,6 +1,6 @@
 {
   "name": "@rndev666/dep",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "A tool to analyze and visualize imports and call relationships",
   "files": [
     "bin/**/*"
@@ -48,7 +48,8 @@
     "chalk": "^4.1.2",
     "commander": "^7.2.0",
     "glob": "^11.0.1",
-    "open": "^8.4.2"
+    "open": "^8.4.2",
+    "typescript": "^4.2.4"
   },
   "devDependencies": {
     "@ryansonshine/commitizen": "^4.2.8",
@@ -63,8 +64,7 @@
     "lint-staged": "^13.2.1",
     "rimraf": "^6.0.1",
     "semantic-release": "^21.0.1",
-    "ts-node": "^10.2.1",
-    "typescript": "^4.2.4",
+    "ts-node": "^10.2.1"
   },
   "config": {
     "commitizen": {
