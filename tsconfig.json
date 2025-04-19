@@ -3,7 +3,8 @@
     "target": "es6",
     "module": "commonjs",
     "strict": false,
-    "outDir": "lib/",
+    "outDir": "bin/",
+    "rootDir": ".",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "declaration": true,
@@ -12,7 +13,9 @@
   },
   "include": [
     "src/**/*.ts",
-    ".eslintrc.js",
+    ".eslintrc.js"
+  ],
+  "exclude": [
     "examples/**/*"
   ]
 }

@@ -4,11 +4,6 @@ import { glob } from 'glob';
 import * as ts from 'typescript';
 import chalk from 'chalk';
 
-interface ImportInfo {
-  filePath: string;
-  imports: string[];
-}
-
 interface AnalyzeOptions {
   glob: string;
   language: 'ts' | 'js';

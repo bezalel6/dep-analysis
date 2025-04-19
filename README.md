@@ -22,7 +22,7 @@
 ## Install
 
 ```bash
-npm install dep-analysis
+npm install dep
 ```
 
 ## Usage
@@ -32,19 +32,19 @@ Usage: dep [options]
 
 Options:
   -V, --version            output the version number
-  -g, --glob <pattern>     glob pattern to match files (required)
-  -l, --language <language> language to analyze (ts or js) (required)
+  -p, --pattern <pattern>  pattern to match files (required)
+  -l, --language <language> language to analyze (ts or js) (default: "ts")
   -o, --output <file>      output file for the graph
-  -f, --format <format>    output format (json, d3, dot, html)
-  --open                   open the HTML visualization in browser (only works with html format)
+  -f, --format <format>    output format (json, d3, dot, html) (default: "html")
+  --open                   open the HTML visualization in browser (default: true)
 
 Examples:
 
   # Analyze TypeScript files and generate HTML visualization
-  $ dep --glob "src/**/*.ts" --language ts --output graph.html --format html --open
+  $ dep --pattern "src/**/*.ts" --language ts --output graph.html --format html
 
   # Analyze JavaScript files and output JSON
-  $ dep --glob "src/**/*.js" --language js --output dependencies.json --format json
+  $ dep --pattern "src/**/*.js" --language js --output dependencies.json --format json
 ```
 
 ## Example Output

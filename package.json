@@ -1,24 +1,22 @@
 {
-  "name": "dep-analysis",
+  "name": "dep",
   "version": "1.0.0",
   "description": "A tool to analyze and visualize imports and call relationships",
   "files": [
-    "!lib/__tests__/**/*",
-    "lib/**/*",
     "bin/**/*"
   ],
   "bin": {
-    "dep": "./bin/index.js"
+    "dep": "./bin/cli.js"
   },
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf ./lib/",
+    "clean": "rm -rf ./bin/",
     "cm": "cz",
     "lint": "eslint ./src/ --fix",
     "start": "TS_NODE_FILES=true ts-node ./src/cli.ts",
     "semantic-release": "semantic-release",
     "typecheck": "tsc --noEmit",
-    "test:example": "ts-node src/cli.ts --glob \"examples/sample-project/src/**/*.ts\" --language ts --output examples/graph.html --format html --open"
+    "test:example": "npm run build && node bin/cli.js -p \"examples/sample-project/src/**/*.ts\""
   },
   "repository": {
     "type": "git",

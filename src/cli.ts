@@ -2,16 +2,34 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { analyzeFiles } from './index';
-import { version } from '../package.json';
+import path from 'path';
+
+let version = "1.0.0";
+try {
+  // Try to get version from package.json in current dir or parent dir
+  let pkgPath;
+  try {
+    // First try current directory
+    pkgPath = path.resolve(process.cwd(), 'package.json');
+    version = require(pkgPath).version;
+  } catch (err) {
+    // Then try parent directory
+    pkgPath = path.resolve(process.cwd(), '..', 'package.json');
+    version = require(pkgPath).version;
+  }
+} catch (_) {
+  // Fallback to hardcoded version if package.json not found
+  console.warn(chalk.yellow('Warning: Could not determine version from package.json'));
+}
 
 const program = new Command();
 
 program
-  .name('dependency-analyzer')
+  .name('dep')
   .description('Analyze imports and function calls between files')
   .version(version)
-  .requiredOption('-g, --glob <pattern>', 'Glob pattern to match files')
-  .requiredOption(
+  .requiredOption('-p, --pattern <pattern>', 'Pattern to match files')
+  .option(
     '-l, --language <language>',
     'Language to analyze (ts or js)',
     value => {
@@ -19,23 +37,23 @@ program
         throw new Error('Language must be either "ts" or "js"');
       }
       return value;
-    }
+    },'ts'
   )
-  
   .option('-o, --output <file>', 'Output file for the graph')
   .option(
     '-f, --format <format>',
     'Output format (json, d3, dot, html)',
     value => {
-      if (!['json', 'd3', 'dot', 'html'].includes(value)) {
+      if (value && !['json', 'd3', 'dot', 'html'].includes(value)) {
         throw new Error('Format must be one of: json, d3, dot, html');
       }
       return value;
-    }
+    },'html'
   )
-  .option('--open', 'Open the HTML visualization in browser (only works with html format)')
+  .option('--open', 'Open the HTML visualization in browser',true)
   .action(async options => {
     try {
+      console.log({options})
       await analyzeFiles(options);
     } catch (error) {
       console.error(
