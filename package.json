@@ -1,22 +1,22 @@
 {
   "name": "dep",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A tool to analyze and visualize imports and call relationships",
   "files": [
     "bin/**/*"
   ],
   "bin": {
-    "dep": "./bin/cli.js"
+    "dep": "./bin/src/cli.js"
   },
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf ./bin/",
+    "clean": "rimraf bin",
     "cm": "cz",
     "lint": "eslint ./src/ --fix",
-    "start": "TS_NODE_FILES=true ts-node ./src/cli.ts",
+    "start": "ts-node ./src/cli.ts ",
     "semantic-release": "semantic-release",
     "typecheck": "tsc --noEmit",
-    "test:example": "npm run build && node bin/cli.js -p \"examples/sample-project/src/**/*.ts\""
+    "test:example": "npm run build && node bin/src/cli --pattern \"examples/sample-project/src/**/*.ts\""
   },
   "repository": {
     "type": "git",
@@ -61,6 +61,7 @@
     "eslint": "^7.25.0",
     "eslint-plugin-node": "^11.1.0",
     "lint-staged": "^13.2.1",
+    "rimraf": "^6.0.1",
     "semantic-release": "^21.0.1",
     "ts-node": "^10.2.1",
     "typescript": "^4.2.4"

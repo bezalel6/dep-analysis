@@ -5,7 +5,7 @@ import * as ts from 'typescript';
 import chalk from 'chalk';
 
 interface AnalyzeOptions {
-  glob: string;
+  pattern: string;
   language: 'ts' | 'js';
   output?: string;
   format?: 'json' | 'd3' | 'dot' | 'html';
@@ -32,10 +32,12 @@ interface Graph {
 // Update the analyzeFiles function to build a graph
 export async function analyzeFiles(options: AnalyzeOptions): Promise<void> {
   try {
-    const files = await glob(options.glob);
+    options.output = `./dist/out.${options.format}`
+    console.log("Analyzing files",options)
+    const files = await glob(options.pattern);
     
     if (files.length === 0) {
-      console.log(chalk.yellow(`No files found matching pattern: ${options.glob}`));
+      console.log(chalk.yellow(`No files found matching pattern: ${options.pattern}`));
       return;
     }
     
@@ -80,9 +82,13 @@ export async function analyzeFiles(options: AnalyzeOptions): Promise<void> {
     buildCallEdges(graph);
     
     // Output the graph
-    if (options.output) {
       let outputContent = '';
-      
+      // Ensure output directory exists
+      const outputDir = path.dirname(options.output);
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+        console.log(chalk.blue(`Created output directory: ${outputDir}`));
+      }
       switch (options.format || 'json') {
         case 'json':
           outputContent = JSON.stringify(graphToJson(graph), null, 2);
@@ -100,7 +106,6 @@ export async function analyzeFiles(options: AnalyzeOptions): Promise<void> {
       
       fs.writeFileSync(options.output, outputContent);
       console.log(chalk.blue(`Graph written to ${options.output} in ${options.format || 'json'} format`));
-    }
     
     // Print summary
     printGraphSummary(graph);

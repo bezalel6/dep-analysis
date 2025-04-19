@@ -2,26 +2,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { analyzeFiles } from './index';
-import path from 'path';
-
-let version = "1.0.0";
-try {
-  // Try to get version from package.json in current dir or parent dir
-  let pkgPath;
-  try {
-    // First try current directory
-    pkgPath = path.resolve(process.cwd(), 'package.json');
-    version = require(pkgPath).version;
-  } catch (err) {
-    // Then try parent directory
-    pkgPath = path.resolve(process.cwd(), '..', 'package.json');
-    version = require(pkgPath).version;
-  }
-} catch (_) {
-  // Fallback to hardcoded version if package.json not found
-  console.warn(chalk.yellow('Warning: Could not determine version from package.json'));
-}
-
+import {version} from '../package.json'
 const program = new Command();
 
 program
@@ -39,7 +20,6 @@ program
       return value;
     },'ts'
   )
-  .option('-o, --output <file>', 'Output file for the graph')
   .option(
     '-f, --format <format>',
     'Output format (json, d3, dot, html)',
@@ -53,6 +33,7 @@ program
   .option('--open', 'Open the HTML visualization in browser',true)
   .action(async options => {
     try {
+      
       console.log({options})
       await analyzeFiles(options);
     } catch (error) {
