@@ -13,7 +13,7 @@ Inspired by [node-cli-boilerplate](https://github.com/sindresorhus/node-cli-boil
 Alternatively, create a new directory and then run:
 
 ```bash
-curl -fsSL https://github.com/ryansonshine/dep-analysis/archive/main.tar.gz | tar -xz --strip-components=1
+curl -fsSL https://github.com/bezalel6/dep-analysis/archive/main.tar.gz | tar -xz --strip-components=1
 ```
 
 Replace `FULL_NAME`, `GITHUB_USER`, and `REPO_NAME` in the script below with your own details to personalize your new package:
@@ -22,7 +22,7 @@ Replace `FULL_NAME`, `GITHUB_USER`, and `REPO_NAME` in the script below with you
 FULL_NAME="John Smith"
 GITHUB_USER="johnsmith"
 REPO_NAME="my-cool-package"
-sed -i.mybak "s/\([\/\"]\)(ryansonshine)/$GITHUB_USER/g; s/dep-analysis\|dep-analysis/$REPO_NAME/g; s//$FULL_NAME/g" package.json package-lock.json README.md
+sed -i.mybak "s/\([\/\"]\)(bezalel6)/$GITHUB_USER/g; s/dep-analysis\|dep-analysis/$REPO_NAME/g; s//$FULL_NAME/g" package.json package-lock.json README.md
 rm *.mybak
 ```
 
@@ -71,16 +71,16 @@ Examples:
   1.0.0
 ```
 
-[build-img]:https://github.com/ryansonshine/dep-analysis/actions/workflows/release.yml/badge.svg
-[build-url]:https://github.com/ryansonshine/dep-analysis/actions/workflows/release.yml
+[build-img]:https://github.com/bezalel6/dep-analysis/actions/workflows/release.yml/badge.svg
+[build-url]:https://github.com/bezalel6/dep-analysis/actions/workflows/release.yml
 [downloads-img]:https://img.shields.io/npm/dt/dep-analysis
 [downloads-url]:https://www.npmtrends.com/dep-analysis
 [npm-img]:https://img.shields.io/npm/v/dep-analysis
 [npm-url]:https://www.npmjs.com/package/dep-analysis
-[issues-img]:https://img.shields.io/github/issues/ryansonshine/dep-analysis
-[issues-url]:https://github.com/ryansonshine/dep-analysis/issues
-[codecov-img]:https://codecov.io/gh/ryansonshine/dep-analysis/branch/main/graph/badge.svg
-[codecov-url]:https://codecov.io/gh/ryansonshine/dep-analysis
+[issues-img]:https://img.shields.io/github/issues/bezalel6/dep-analysis
+[issues-url]:https://github.com/bezalel6/dep-analysis/issues
+[codecov-img]:https://codecov.io/gh/bezalel6/dep-analysis/branch/main/graph/badge.svg
+[codecov-url]:https://codecov.io/gh/bezalel6/dep-analysis
 [semantic-release-img]:https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
 [semantic-release-url]:https://github.com/semantic-release/semantic-release
 [commitizen-img]:https://img.shields.io/badge/commitizen-friendly-brightgreen.svg
