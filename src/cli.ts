@@ -2,13 +2,14 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { analyzeFiles } from './index';
+import { version } from '../package.json';
 
 const program = new Command();
 
 program
   .name('dependency-analyzer')
   .description('Analyze imports and function calls between files')
-  .version('0.1.0')
+  .version(version)
   .requiredOption('-g, --glob <pattern>', 'Glob pattern to match files')
   .requiredOption(
     '-l, --language <language>',
