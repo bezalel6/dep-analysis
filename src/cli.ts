@@ -20,6 +20,7 @@ program
       return value;
     }
   )
+  
   .option('-o, --output <file>', 'Output file for the graph')
   .option(
     '-f, --format <format>',
