@@ -1,0 +1,35 @@
+module.exports = {
+  root: true,
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'node',],
+  parserOptions: {
+    tsconfigRootDir: __dirname,
+    project: ['./tsconfig.json'],
+  },
+  extends: [
+    'eslint:recommended',
+    'plugin:node/recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+  ],
+  rules: {
+    'node/no-missing-import': 'off',
+    'node/no-empty-function': 'off',
+    'node/no-unsupported-features/es-syntax': 'off',
+    'node/no-missing-require': 'off',
+    'node/shebang': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
+    'node/no-process-exit': 'off',
+    'no-process-exit': 'off',
+    quotes: ['warn', 'single', { avoidEscape: true }],
+    'node/no-unpublished-import': 'off',
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-unsafe-member-access': 'off',
+    '@typescript-eslint/restrict-template-expressions': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off'
+  },
+};
