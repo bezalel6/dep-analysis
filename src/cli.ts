@@ -6,7 +6,7 @@ import {version} from '../package.json'
 const program = new Command();
 
 program
-  .name('dep')
+  .name('dep-graph')
   .description('Analyze imports and function calls between files')
   .version(version)
   .requiredOption('-p, --pattern <pattern>', 'Pattern to match files')

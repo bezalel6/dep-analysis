@@ -1,4 +1,4 @@
-# dep-analysis
+# dep-graph
 
 [![npm package][npm-img]][npm-url]
 [![Build Status][build-img]][build-url]
@@ -19,16 +19,16 @@
 - Find most imported files
 - Support for both TypeScript and JavaScript projects
 
-## Install
+## Installation
 
 ```bash
-npm install dep
+npm install dep-graph
 ```
 
 ## Usage
 
 ```bash
-Usage: dep [options]
+Usage: dep-graph [options]
 
 Options:
   -V, --version            output the version number
@@ -41,10 +41,10 @@ Options:
 Examples:
 
   # Analyze TypeScript files and generate HTML visualization
-  $ dep --pattern "src/**/*.ts" --language ts --output graph.html --format html
+  $ dep-graph --pattern "src/**/*.ts" --language ts --output graph.html --format html
 
   # Analyze JavaScript files and output JSON
-  $ dep --pattern "src/**/*.js" --language js --output dependencies.json --format json
+  $ dep-graph --pattern "src/**/*.js" --language js --output dependencies.json --format json
 ```
 
 ## Example Output

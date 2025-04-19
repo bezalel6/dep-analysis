@@ -1,12 +1,12 @@
 {
-  "name": "dep",
-  "version": "2.0.0",
+  "name": "dep-graph",
+  "version": "2.1.0",
   "description": "A tool to analyze and visualize imports and call relationships",
   "files": [
     "bin/**/*"
   ],
   "bin": {
-    "dep": "./bin/src/cli.js"
+    "dep-graph": "./bin/src/cli.js"
   },
   "scripts": {
     "build": "tsc",
