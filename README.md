@@ -1,4 +1,4 @@
-# dep-graph
+# @rndev666/dep
 
 [![npm package][npm-img]][npm-url]
 [![Build Status][build-img]][build-url]
@@ -22,13 +22,13 @@
 ## Installation
 
 ```bash
-npm install dep-graph
+npm install @rndev666/dep
 ```
 
 ## Usage
 
 ```bash
-Usage: dep-graph [options]
+Usage: dep [options]
 
 Options:
   -V, --version            output the version number
@@ -41,10 +41,10 @@ Options:
 Examples:
 
   # Analyze TypeScript files and generate HTML visualization
-  $ dep-graph --pattern "src/**/*.ts" --language ts --output graph.html --format html
+  $ dep --pattern "src/**/*.ts" --language ts --output graph.html --format html
 
   # Analyze JavaScript files and output JSON
-  $ dep-graph --pattern "src/**/*.js" --language js --output dependencies.json --format json
+  $ dep --pattern "src/**/*.js" --language js --output dependencies.json --format json
 ```
 
 ## Example Output
@@ -65,10 +65,10 @@ The HTML visualization provides an interactive graph where you can:
 
 [build-img]:https://github.com/bezalel6/dep-analysis/actions/workflows/release.yml/badge.svg
 [build-url]:https://github.com/bezalel6/dep-analysis/actions/workflows/release.yml
-[downloads-img]:https://img.shields.io/npm/dt/dep-analysis
-[downloads-url]:https://www.npmtrends.com/dep-analysis
-[npm-img]:https://img.shields.io/npm/v/dep-analysis
-[npm-url]:https://www.npmjs.com/package/dep-analysis
+[downloads-img]:https://img.shields.io/npm/dt/@rndev666/dep
+[downloads-url]:https://www.npmtrends.com/@rndev666/dep
+[npm-img]:https://img.shields.io/npm/v/@rndev666/dep
+[npm-url]:https://www.npmjs.com/package/@rndev666/dep
 [issues-img]:https://img.shields.io/github/issues/bezalel6/dep-analysis
 [issues-url]:https://github.com/bezalel6/dep-analysis/issues
 [codecov-img]:https://codecov.io/gh/bezalel6/dep-analysis/branch/main/graph/badge.svg
