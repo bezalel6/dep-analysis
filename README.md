@@ -1,45 +1,5 @@
 # dep-analysis
 
-> Boilerplate to kickstart creating a Node.js command-line tool
-
-Inspired by [node-cli-boilerplate](https://github.com/sindresorhus/node-cli-boilerplate)
-
-## Getting started
-
-### Set up your repository
-
-**Click the "Use this template" button.**
-
-Alternatively, create a new directory and then run:
-
-```bash
-curl -fsSL https://github.com/bezalel6/dep-analysis/archive/main.tar.gz | tar -xz --strip-components=1
-```
-
-Replace `FULL_NAME`, `GITHUB_USER`, and `REPO_NAME` in the script below with your own details to personalize your new package:
-
-```bash
-FULL_NAME="John Smith"
-GITHUB_USER="johnsmith"
-REPO_NAME="my-cool-package"
-sed -i.mybak "s/\([\/\"]\)(bezalel6)/$GITHUB_USER/g; s/dep-analysis\|dep-analysis/$REPO_NAME/g; s//$FULL_NAME/g" package.json package-lock.json README.md
-rm *.mybak
-```
-
-### Add NPM Token
-
-Add your npm token to your GitHub repository secrets as `NPM_TOKEN`.
-
-### Add Codecov integration
-
-Enable the Codecov GitHub App [here](https://github.com/apps/codecov).
-
-**Remove everything from here and above**
-
----
-
-# dep-analysis
-
 [![npm package][npm-img]][npm-url]
 [![Build Status][build-img]][build-url]
 [![Downloads][downloads-img]][downloads-url]
@@ -48,7 +8,16 @@ Enable the Codecov GitHub App [here](https://github.com/apps/codecov).
 [![Commitizen Friendly][commitizen-img]][commitizen-url]
 [![Semantic Release][semantic-release-img]][semantic-release-url]
 
-> My awesome command-line tool
+> A powerful tool to analyze and visualize dependencies between files in TypeScript/JavaScript projects
+
+## Features
+
+- Analyze imports and function calls between files
+- Generate dependency graphs in multiple formats (JSON, D3, DOT, HTML)
+- Interactive HTML visualization with D3.js
+- Detect circular dependencies
+- Find most imported files
+- Support for both TypeScript and JavaScript projects
 
 ## Install
 
@@ -59,17 +28,40 @@ npm install dep-analysis
 ## Usage
 
 ```bash
-Usage: my-command [options]
+Usage: dep [options]
 
 Options:
   -V, --version            output the version number
-  -d, --debug              enables verbose logging (default: false)
+  -g, --glob <pattern>     glob pattern to match files (required)
+  -l, --language <language> language to analyze (ts or js) (required)
+  -o, --output <file>      output file for the graph
+  -f, --format <format>    output format (json, d3, dot, html)
+  --open                   open the HTML visualization in browser (only works with html format)
 
 Examples:
 
-  $ my-command --version
-  1.0.0
+  # Analyze TypeScript files and generate HTML visualization
+  $ dep --glob "src/**/*.ts" --language ts --output graph.html --format html --open
+
+  # Analyze JavaScript files and output JSON
+  $ dep --glob "src/**/*.js" --language js --output dependencies.json --format json
 ```
+
+## Example Output
+
+The tool provides a detailed analysis of your codebase, including:
+
+- Total number of files analyzed
+- Import dependencies between files
+- Function call relationships
+- Circular dependencies (if any)
+- Most imported files
+
+The HTML visualization provides an interactive graph where you can:
+- Zoom and pan
+- Click on nodes to see details
+- Hover over edges to see relationship types
+- Search for specific files or functions
 
 [build-img]:https://github.com/bezalel6/dep-analysis/actions/workflows/release.yml/badge.svg
 [build-url]:https://github.com/bezalel6/dep-analysis/actions/workflows/release.yml

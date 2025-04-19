@@ -1,6 +1,6 @@
 {
   "name": "dep-analysis",
-  "version": "0.0.1-development",
+  "version": "1.0.0",
   "description": "A tool to analyze and visualize imports and call relationships",
   "files": [
     "!lib/__tests__/**/*",
