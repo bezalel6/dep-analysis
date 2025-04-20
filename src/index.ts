@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { glob } from 'glob';
 import * as ts from 'typescript';
+// import * as js from 'javascript';
 import chalk from 'chalk';
 
 interface AnalyzeOptions {
@@ -33,7 +34,7 @@ interface Graph {
 export async function analyzeFiles(options: AnalyzeOptions): Promise<void> {
   try {
     options.output = `./dist/out.${options.format}`
-    console.log("Analyzing files",options)
+    console.log('Analyzing files',options)
     const files = await glob(options.pattern);
     
     if (files.length === 0) {
@@ -307,13 +308,13 @@ function extractImports(filePath: string): string[] {
     filePath,
     fileContent,
     ts.ScriptTarget.Latest,
-    true
+    true,
+    ts.ScriptKind.JS
   );
-  
   // Visit each node in the source file
   ts.forEachChild(sourceFile, node => {
     // Check if the node is an import declaration
-    if (ts.isImportDeclaration(node)) {
+    if ( ts.isImportDeclaration(node)) {
       // Get the module specifier (the string in the import statement)
       const moduleSpecifier = node.moduleSpecifier;
       
@@ -341,7 +342,8 @@ function extractExportsAndCalls(filePath: string): { exports: Map<string, string
     filePath,
     fileContent,
     ts.ScriptTarget.Latest,
-    true
+    true,
+    ts.ScriptKind.JS
   );
   
   // Visit each node to find exports and calls
