@@ -1,8 +1,10 @@
 #!/usr/bin/env node
-import { Command } from 'commander';
+import { Command, Option } from 'commander';
 import chalk from 'chalk';
-import { analyzeFiles } from './index';
-import {version} from '../package.json'
+import { analyzeFiles } from './analyze/index';
+import { version } from '../package.json';
+import { AnalyzerConfig, AnalyzerOptions } from './analyze/analyzer-config';
+
 const program = new Command();
 
 program
@@ -10,37 +12,29 @@ program
   .description('Analyze imports and function calls between files')
   .version(version)
   .requiredOption('-p, --pattern <pattern>', 'Pattern to match files')
-  .option(
-    '-l, --language <language>',
-    'Language to analyze (ts or js)',
-    value => {
-      if (value !== 'ts' && value !== 'js') {
-        throw new Error('Language must be either "ts" or "js"');
-      }
-      return value;
-    },'ts'
+  .addOption(
+    new Option('-l, --languages <languages...>', 'Languages to analyze (can specify multiple)')
+      .choices(['ts', 'js', 'tsx', 'jsx'])
+      .default(['ts'])
   )
-  .option(
-    '-f, --format <format>',
-    'Output format (json, d3, dot, html)',
-    value => {
-      if (value && !['json', 'd3', 'dot', 'html'].includes(value)) {
-        throw new Error('Format must be one of: json, d3, dot, html');
-      }
-      return value;
-    },'html'
+  .addOption(
+    new Option('-f, --format <format>', 'Output format')
+      .choices(['json', 'd3', 'dot', 'html'])
+      .default('html')
   )
-  .option('--open', 'Open the HTML visualization in browser',true)
-  .action(async options => {
+  .option('-open', 'Open the HTML visualization in browser', true)
+  .action(async (options: AnalyzerOptions) => {
     try {
-      
-      console.log({options})
-      await analyzeFiles(options);
+      // Create config class from CLI options
+      const config = new AnalyzerConfig(options);
+
+      console.log(chalk.blue('Using configuration:'));
+      console.log(config.toString());
+
+      // Pass the config object to your analyzer
+      await analyzeFiles(config);
     } catch (error) {
-      console.error(
-        chalk.red('Error:'),
-        error instanceof Error ? error.message : error
-      );
+      console.error(chalk.red('Error:'), error instanceof Error ? error.message : error);
       process.exit(1);
     }
   });
@@ -48,5 +42,7 @@ program
 program.parse();
 
 // Print out the parsed options
+const parsedOptions = program.opts();
 console.log(chalk.blue('Parsed options:'));
-console.log(program.opts());
+
+console.log(parsedOptions);
