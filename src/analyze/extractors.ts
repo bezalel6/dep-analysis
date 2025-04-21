@@ -14,13 +14,12 @@ export function createSourceFile(filePath: string, config: AnalyzerConfig): ts.S
     config.scriptKind
   );
 }
-
 export function extractImports(filePath: string, config: AnalyzerConfig): string[] {
   const imports: string[] = [];
   const sourceFile = createSourceFile(filePath, config);
 
   ts.forEachChild(sourceFile, (node) => {
-    console.log(ts.SyntaxKind[node.kind]);
+    // Handle ES6 import declarations
     if (ts.isImportDeclaration(node)) {
       const moduleSpecifier = node.moduleSpecifier;
 
@@ -31,12 +30,37 @@ export function extractImports(filePath: string, config: AnalyzerConfig): string
           imports.push(importPath);
         }
       } else {
-        console.warn(`DIdnt label import: ${moduleSpecifier}`);
+        console.warn(`Didn't label import: ${moduleSpecifier}`);
       }
+    }
+    // Handle CommonJS require statements
+    else if (ts.isVariableStatement(node) || ts.isExpressionStatement(node)) {
+      node.forEachChild((child) => {
+        if (ts.isVariableDeclaration(child) && child.initializer) {
+          checkForRequire(child.initializer, imports);
+        } else if (ts.isCallExpression(child)) {
+          checkForRequire(child, imports);
+        }
+      });
     }
   });
 
   return imports;
+}
+
+function checkForRequire(node: ts.Node, imports: string[]): void {
+  if (
+    ts.isCallExpression(node) &&
+    ts.isIdentifier(node.expression) &&
+    node.expression.text === 'require'
+  ) {
+    if (node.arguments.length > 0 && ts.isStringLiteral(node.arguments[0])) {
+      const importPath = node.arguments[0].text;
+      if (importPath.startsWith('.')) {
+        imports.push(importPath);
+      }
+    }
+  }
 }
 
 export function extractExportsAndCalls(
@@ -48,10 +72,6 @@ export function extractExportsAndCalls(
   const sourceFile = createSourceFile(filePath, config);
 
   function visit(node: ts.Node) {
-    if (node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)) {
-      console.log(node.getText());
-      console.log((node as any).name);
-    }
     if (ts.isFunctionDeclaration(node) && node.name) {
       const functionName = node.name.text;
 
