@@ -37,7 +37,7 @@ export interface GraphEdge {
 }
 
 export class AnalyzerConfig {
-  constructor(private options: AnalyzerOptions) { }
+  constructor(private options: AnalyzerOptions) {}
 
   get pattern() {
     return this.options.pattern;
@@ -56,11 +56,11 @@ export class AnalyzerConfig {
   }
 
   get isTypeScript() {
-    return this.options.languages.some(lang => lang === 'ts' || lang === 'tsx');
+    return this.options.languages.some((lang) => lang === 'ts' || lang === 'tsx');
   }
 
   get isJSX() {
-    return this.options.languages.some(l => l === 'jsx' || l === 'tsx')
+    return this.options.languages.some((l) => l === 'jsx' || l === 'tsx');
   }
 
   get scriptKind(): ScriptKind {
@@ -71,21 +71,25 @@ export class AnalyzerConfig {
   }
 
   async files() {
-    return glob(this.options.pattern)
+    return glob(this.options.pattern);
   }
 
   get output() {
-    return `./dist/out/${this.options.format}`
+    return `./dist/out.${this.options.format}`;
   }
 
   toString(): string {
-    return JSON.stringify({
-      pattern: this.pattern,
-      languages: this.languages,
-      format: this.format,
-      open: this.shouldOpen,
-      isTypeScript: this.isTypeScript,
-      isJSX: this.isJSX
-    }, null, 2);
+    return JSON.stringify(
+      {
+        pattern: this.pattern,
+        languages: this.languages,
+        format: this.format,
+        open: this.shouldOpen,
+        isTypeScript: this.isTypeScript,
+        isJSX: this.isJSX,
+      },
+      null,
+      2
+    );
   }
 }

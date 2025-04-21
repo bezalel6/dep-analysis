@@ -22,7 +22,7 @@ program
       .choices(['json', 'd3', 'dot', 'html'])
       .default('html')
   )
-  .option('-open', 'Open the HTML visualization in browser', true)
+  .option('--open', 'Open the HTML visualization in browser', true)
   .action(async (options: AnalyzerOptions) => {
     try {
       // Create config class from CLI options

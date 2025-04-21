@@ -4,10 +4,10 @@ import { Graph, AnalyzeOptions } from './types';
 import { exportD3Format } from './exporters';
 import { AnalyzerConfig } from './analyzer-config';
 
-export async function generateHtmlVisualization(graph: Graph, config:AnalyzerConfig){
+export async function generateHtmlVisualization(graph: Graph, config: AnalyzerConfig) {
   const d3Data = exportD3Format(graph);
-  
-  const html =  `
+
+  const html = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -146,15 +146,15 @@ export async function generateHtmlVisualization(graph: Graph, config:AnalyzerCon
 </body>
 </html>
   `;
-  
+
   fs.writeFileSync(config.output, html);
   console.log(chalk.blue(`HTML visualization written to ${config.output}`));
-  
+
   // Open in browser if requested
   if (config.shouldOpen) {
-    return import('open').then(A=>{
+    return import('open').then((A) => {
       console.log(chalk.green(`Opening ${config.output} in your browser`));
-     return A.default(config.output);
-    })
+      return A.default(config.output);
+    });
   }
-} 
+}
