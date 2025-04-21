@@ -16,7 +16,7 @@
     "start": "ts-node ./src/cli.ts ",
     "semantic-release": "semantic-release",
     "typecheck": "tsc --noEmit",
-    "test": "npm run build && node bin/src/cli --pattern \"examples/sample-project/src/**/*.ts\""
+    "test": "npm run build && node bin/src/cli -l js --pattern \"examples/js-examples/src/**/*.js\""
   },
   "repository": {
     "type": "git",
