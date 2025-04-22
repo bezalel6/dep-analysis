@@ -1,8 +1,10 @@
 import fs from 'fs';
 import * as ts from 'typescript';
-import { Node, Graph } from './analyzer-config';
+import { Node, Graph, ExportType } from './analyzer-config';
 import { AnalyzerConfig } from './analyzer-config';
 import { NodeFlags } from 'typescript';
+import { glob } from 'glob';
+import * as path from 'path';
 
 export function createSourceFile(filePath: string, config: AnalyzerConfig): ts.SourceFile {
   const fileContent = fs.readFileSync(filePath, 'utf-8');
@@ -14,19 +16,49 @@ export function createSourceFile(filePath: string, config: AnalyzerConfig): ts.S
     config.scriptKind
   );
 }
+const hasExtension = (path: string) => /.*\.[a-zA-Z]+$/.test(path);
+/**
+ * Resolves a module path to an actual file path with the correct extension
+ * @param modulePath The module path without extension
+ * @param config The analyzer configuration
+ * @returns The resolved file path or undefined if not found
+ */
+function resolveExtension(modulePath: string, config: AnalyzerConfig): string | undefined {
+  console.log('Resolving:', modulePath);
+
+  // Handle relative paths (starting with ./ or ../)
+  const isRelative = modulePath.startsWith('./') || modulePath.startsWith('../');
+
+  // Normalize the module path (remove leading ./ if present)
+  const normalizedPath = isRelative ? modulePath.replace(/^\.\//, '') : modulePath;
+
+  // Construct the full path pattern to search for
+  const searchPattern = path.join(config.basePath, normalizedPath + config.extension);
+
+  // Use glob to find matching files
+  const matches = glob.sync(searchPattern);
+
+  // Return the first match if found
+  return matches.length > 0 ? matches[0] : undefined;
+}
+
 export function extractImports(filePath: string, config: AnalyzerConfig): string[] {
   const imports: string[] = [];
   const sourceFile = createSourceFile(filePath, config);
 
-  ts.forEachChild(sourceFile, (node) => {
+  function visit(node: ts.Node) {
     // Handle ES6 import declarations
     if (ts.isImportDeclaration(node)) {
       const moduleSpecifier = node.moduleSpecifier;
 
       if (ts.isStringLiteral(moduleSpecifier)) {
-        const importPath = moduleSpecifier.text;
+        let importPath = moduleSpecifier.text;
 
         if (importPath.startsWith('.')) {
+          console.log(importPath, 'Has extension:', hasExtension(importPath));
+          if (!hasExtension(importPath)) {
+            importPath = resolveExtension(importPath, config);
+          }
           imports.push(importPath);
         }
       } else {
@@ -34,29 +66,40 @@ export function extractImports(filePath: string, config: AnalyzerConfig): string
       }
     }
     // Handle CommonJS require statements
-    else if (ts.isVariableStatement(node) || ts.isExpressionStatement(node)) {
-      node.forEachChild((child) => {
-        if (ts.isVariableDeclaration(child) && child.initializer) {
-          checkForRequire(child.initializer, imports);
-        } else if (ts.isCallExpression(child)) {
-          checkForRequire(child, imports);
-        }
-      });
+    else if (ts.isCallExpression(node)) {
+      checkForRequire(node, imports, config);
     }
-  });
 
-  return imports;
+    ts.forEachChild(node, visit);
+  }
+
+  ts.forEachChild(sourceFile, visit);
+  return imports.map((importPath) => {
+    // Convert the import path to a module ID relative to the base path
+    const moduleId = config.pathToModuleId(importPath);
+
+    // Make it a relative import starting with './'
+    // If it's already a relative path, don't modify it
+    if (!moduleId.startsWith('./') && !moduleId.startsWith('../')) {
+      return `./${moduleId}`;
+    }
+
+    return moduleId;
+  });
 }
 
-function checkForRequire(node: ts.Node, imports: string[]): void {
+function checkForRequire(node: ts.Node, imports: string[], config: AnalyzerConfig): void {
   if (
     ts.isCallExpression(node) &&
     ts.isIdentifier(node.expression) &&
     node.expression.text === 'require'
   ) {
     if (node.arguments.length > 0 && ts.isStringLiteral(node.arguments[0])) {
-      const importPath = node.arguments[0].text;
+      let importPath = node.arguments[0].text;
       if (importPath.startsWith('.')) {
+        if (!hasExtension(importPath)) {
+          importPath = resolveExtension(importPath, config);
+        }
         imports.push(importPath);
       }
     }
@@ -66,12 +109,37 @@ function checkForRequire(node: ts.Node, imports: string[]): void {
 export function extractExportsAndCalls(
   filePath: string,
   config: AnalyzerConfig
-): { exports: Map<string, string>; calls: Set<string> } {
-  const exports = new Map<string, string>();
+): { exports: Map<string, ExportType>; calls: Set<string> } {
+  const exports = new Map<string, ExportType>();
   const calls = new Set<string>();
   const sourceFile = createSourceFile(filePath, config);
 
   function visit(node: ts.Node) {
+    // Handle CommonJS module.exports
+    if (ts.isExpressionStatement(node)) {
+      const expr = node.expression;
+      if (
+        ts.isBinaryExpression(expr) &&
+        ts.isPropertyAccessExpression(expr.left) &&
+        ts.isIdentifier(expr.left.expression) &&
+        expr.left.expression.text === 'module' &&
+        ts.isIdentifier(expr.left.name) &&
+        expr.left.name.text === 'exports'
+      ) {
+        if (ts.isObjectLiteralExpression(expr.right)) {
+          expr.right.properties.forEach((prop) => {
+            if (ts.isPropertyAssignment(prop) && ts.isIdentifier(prop.name)) {
+              const varType =
+                ts.isFunctionExpression(prop.initializer) || ts.isArrowFunction(prop.initializer)
+                  ? 'function'
+                  : 'variable';
+              exports.set(prop.name.text, varType);
+            }
+          });
+        }
+      }
+    }
+
     if (ts.isFunctionDeclaration(node) && node.name) {
       const functionName = node.name.text;
 
@@ -94,7 +162,6 @@ export function extractExportsAndCalls(
         });
       }
     }
-
     if (ts.isExportAssignment(node)) {
       if (ts.isIdentifier(node.expression)) {
         exports.set(node.expression.text, 'default');

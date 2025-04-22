@@ -147,14 +147,14 @@ export async function generateHtmlVisualization(graph: Graph, config: AnalyzerCo
 </html>
   `;
 
-  fs.writeFileSync(config.output, html);
-  console.log(chalk.blue(`HTML visualization written to ${config.output}`));
+  fs.writeFileSync(config.outputPath, html);
+  console.log(chalk.blue(`HTML visualization written to ${config.outputPath}`));
 
   // Open in browser if requested
   if (config.shouldOpen) {
     return import('open').then((A) => {
-      console.log(chalk.green(`Opening ${config.output} in your browser`));
-      return A.default(config.output);
+      console.log(chalk.green(`Opening ${config.outputPath} in your browser`));
+      return A.default(config.outputPath);
     });
   }
 }

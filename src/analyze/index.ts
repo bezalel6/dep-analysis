@@ -12,7 +12,7 @@ import { AnalyzerConfig } from './analyzer-config';
 // Update the analyzeFiles function to build a graph
 export async function analyzeFiles(config: AnalyzerConfig): Promise<void> {
   try {
-    const files = await config.files();
+    const files = await config.findFiles();
     if (files.length === 0) {
       console.log(chalk.yellow(`No files found matching pattern: ${config.pattern}`));
       return;
@@ -32,6 +32,7 @@ export async function analyzeFiles(config: AnalyzerConfig): Promise<void> {
 
         graph.nodes.set(filePath, {
           id: filePath,
+          path: filePath,
           imports,
           exports,
           calls,
@@ -52,7 +53,7 @@ export async function analyzeFiles(config: AnalyzerConfig): Promise<void> {
     buildCallEdges(graph);
 
     let outputContent = '';
-    const outputDir = path.dirname(config.output);
+    const outputDir = path.dirname(config.outputPath);
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
       console.log(chalk.blue(`Created output directory: ${outputDir}`));
@@ -73,8 +74,8 @@ export async function analyzeFiles(config: AnalyzerConfig): Promise<void> {
         return;
     }
 
-    fs.writeFileSync(config.output, outputContent);
-    console.log(chalk.blue(`Graph written to ${config.output} in ${config.format} format`));
+    fs.writeFileSync(config.outputPath, outputContent);
+    console.log(chalk.blue(`Graph written to ${config.outputPath} in ${config.format} format`));
 
     printGraphSummary(graph);
   } catch (error) {
