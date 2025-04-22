@@ -191,22 +191,28 @@ export class AnalyzerConfig {
     const files = await glob(this.pattern, { absolute: true });
     return files.map((file) => path.normalize(file));
   }
+  pathToModuleId(filePath: string, importingFilePath?: string): string {
+    if (!filePath) return '';
 
-  /**
-   * Convert a file path to a module ID
-   */
-  pathToModuleId(filePath: string): string {
-    // Normalize the path to use forward slashes
     const normalizedPath = path.normalize(filePath).replace(/\\/g, '/');
 
-    // If the path starts with the base path, make it relative to the base path
+    // If we have an importing file context and the path is relative to it
+    if (importingFilePath && (filePath.startsWith('./') || filePath.startsWith('../'))) {
+      const importingDir = path.dirname(importingFilePath);
+      const absolutePath = path.resolve(importingDir, filePath);
+      const normalizedAbsolutePath = absolutePath.replace(/\\/g, '/');
+
+      // Keep the relative format but ensure it points to the correct location
+      return filePath.replace(new RegExp(`\\${this.extension}$`), '');
+    }
+
+    // Standard case: convert from absolute to relative to base path
     if (normalizedPath.startsWith(this.basePath)) {
       const relativePath = normalizedPath.slice(this.basePath.length);
-      // Remove leading slash and extension
       return relativePath.replace(/^\/+/, '').replace(new RegExp(`\\${this.extension}$`), '');
     }
 
-    // Otherwise, just remove the extension
+    // Just remove the extension for other paths
     return normalizedPath.replace(new RegExp(`\\${this.extension}$`), '');
   }
 

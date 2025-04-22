@@ -31,7 +31,7 @@ export async function analyzeFiles(config: AnalyzerConfig): Promise<void> {
         const { exports, calls } = extractExportsAndCalls(filePath, config);
 
         graph.nodes.set(filePath, {
-          id: filePath,
+          id: filePath.replace(config.basePath, ''),
           path: filePath,
           imports,
           exports,
